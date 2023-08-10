@@ -34,16 +34,12 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 vector = 'UP'
-            #    success_moving = snake.move(pygame.K_UP)
             if event.key == pygame.K_DOWN:
                 vector = 'DOWN'
-            #    success_moving = snake.move(pygame.K_DOWN)
             if event.key == pygame.K_RIGHT:
                 vector = 'RIGHT'
-            #    success_moving = snake.move(pygame.K_RIGHT)
             if event.key == pygame.K_LEFT:
                 vector = 'LEFT'
-            #    success_moving = snake.move(pygame.K_LEFT)
 
     success_moving = snake.move_vector(vector)
     # fill the screen with a color to wipe away anything from last frame
@@ -52,9 +48,9 @@ while running:
         snake.draw(screen, color='orange')
         running = False
     elif apple.x == snake.x and apple.y == snake.y:
-        pass
-        # Проверить чтоб не генерировать яблоко внутри хвоста !
-        apple.moveapple(*generate_xy())
+        while snake.in_snake(*(applexy := generate_xy())):
+            pass
+        apple.moveapple(*applexy)
         apple.draw(screen, color='red')
         snake.add_tail(vector)
         snake.draw(screen)

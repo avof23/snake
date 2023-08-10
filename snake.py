@@ -38,9 +38,11 @@ class Snake(Square):
         return True
 
     def add_tail(self, vector):
-        pass
         self.body_count += 1
         if vector == 'UP' or vector == 'DOWN':
             self.body.append(pg.Rect(self.x, self.y+SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_HEIGHT))
         elif vector == 'LEFT' or vector == 'RIGHT':
             self.body.append(pg.Rect(self.x + SQUARE_WIDTH, self.y, SQUARE_WIDTH, SQUARE_HEIGHT))
+
+    def in_snake(self, x, y):
+        return pg.Rect(x, y, SQUARE_WIDTH, SQUARE_HEIGHT) in self.body

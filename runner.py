@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from constants import WIDTH, HEIGHT, SQUARE_WIDTH, SQUARE_HEIGHT, SNAKE_DELAY_SPEED, GAME_OVER_TIMEOUT, REFRESH_SCREEN
+from constants import WIDTH, HEIGHT, SQUARE_WIDTH, SQUARE_HEIGHT, SNAKE_DELAY_SPEED, GAME_OVER_TIMEOUT, REFRESH_SCREEN, START_SNAKE_W, START_SNAKE_H
 from snake import Snake
 from apple import Apple
 
@@ -20,8 +20,9 @@ pygame.display.set_caption('Snake')
 clock = pygame.time.Clock()
 running = True
 vector = 'RIGHT'
+acceleration = 0
 random.seed()
-snake = Snake(*generate_xy())
+snake = Snake(START_SNAKE_W,START_SNAKE_H)
 apple = Apple(*generate_xy())
 
 while running:
@@ -32,13 +33,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP and vector != 'DOWN':
                 vector = 'UP'
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN and vector != 'UP':
                 vector = 'DOWN'
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT and vector != 'LEFT':
                 vector = 'RIGHT'
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT and vector != 'RIGHT':
                 vector = 'LEFT'
 
     success_moving = snake.move_vector(vector)
@@ -50,6 +51,7 @@ while running:
     elif apple.x == snake.x and apple.y == snake.y:
         while snake.in_snake(*(applexy := generate_xy())):
             pass
+        acceleration -= 5
         apple.moveapple(*applexy)
         apple.draw(screen, color='red')
         snake.add_tail(vector)
@@ -59,7 +61,7 @@ while running:
         snake.draw(screen)
     # flip() the display to put your work on screen
     pygame.display.flip()
-    pygame.time.delay(SNAKE_DELAY_SPEED)
+    pygame.time.delay(SNAKE_DELAY_SPEED + acceleration)
     clock.tick(REFRESH_SCREEN)
 
 pygame.time.delay(GAME_OVER_TIMEOUT)
